@@ -44,9 +44,31 @@ for i=1:m
  yMat(i,y(i))=1;
 end
 
-J=((1/m)* (sum(sum(-1*yMat.*log(hThetaX)-(1-yMat).*log(1- hThetaX))))) + ((lambda/(2*m))*(sum(sum(Theta1.*Theta1)) + sum(sum(Theta2.*Theta2))));
+%J=((1/m)* (sum(sum(-1*yMat.*log(hThetaX)-(1-yMat).*log(1- hThetaX))))) + ((lambda/(2*m))*(sum(sum(Theta1.*Theta1)) + sum(sum(Theta2.*Theta2))));
+J_plain=((1/m)* (sum(sum(-1*yMat.*log(hThetaX)-(1-yMat).*log(1- hThetaX)))));
+reg = (lambda/(2*m))* (sum(sum(Theta1(:,2:end).*Theta1(:,2:end))) + sum(sum(Theta2(:,2:end).*Theta2(:,2:end))));
+J = J_plain + reg;
 
+for i=1:m
+ a_1 = [1; X(i,:)'];
+ a_3 = a3(i,:)';
+ a_2 = a2(i,:)';
+ y = yMat(i,:)';
+ delta_3 = a_3 - y;
+ z_2 = z2(i,:)';
+ g_z2 = a_2.*(1- a_2); %[1; sigmoidGradient(z_2)];
+ delta_2 = (Theta2'*delta_3).*g_z2;
 
+ delta_2 = delta_2(2:end);
+ % delta_3 = delta_3(2:end);
+ 
+ Theta1_grad = Theta1_grad + delta_2 * a_1';
+ Theta2_grad = Theta2_grad + delta_3 * a_2';
+ 
+end
+
+Theta1_grad = Theta1_grad/m;
+Theta2_grad = Theta2_grad/m;
 
 % ====================== YOUR CODE HERE ======================
 % Instructions: You should complete the code by working through the
