@@ -67,8 +67,13 @@ for i=1:m
  
 end
 
-Theta1_grad = Theta1_grad/m;
-Theta2_grad = Theta2_grad/m;
+tmp_Theta1=Theta1;
+tmp_Theta2=Theta2;
+tmp_Theta1(:,1)=0;
+tmp_Theta2(:,1)=0;
+
+Theta1_grad = Theta1_grad/m + (lambda/m)*((tmp_Theta1));
+Theta2_grad = Theta2_grad/m + (lambda/m)*((tmp_Theta2));
 
 % ====================== YOUR CODE HERE ======================
 % Instructions: You should complete the code by working through the
